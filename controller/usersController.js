@@ -59,7 +59,7 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
                         },
                         secret
                     )
-                    res.status(200).json({ success: true, token: token })
+                    res.status(200).json({ success: true, token: token, userName : userData.userName })
                 }
                 else if (!data) {
                     return res.status(400).json({ success: false, message: 'Invalid Password' })
