@@ -32,7 +32,7 @@ exports.createUser = asyncHandler(async (req, res, next) => {
             const createdUser = await Users.create(newUser)
             console.log(createdUser);
             if (createdUser) {
-                res.status(200).json({ success: true, Users: createdUser.userName })
+                res.status(201).json({ success: true, Users: createdUser.userName, message : 'User successfully created' })
             } else {
                 return next(new errorResponse('User not created', 400))
             } 
@@ -62,7 +62,7 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
                     res.status(200).json({ success: true, token: token })
                 }
                 else if (!data) {
-                    return res.status(400).json({ success: false, Message: 'Invalid Password' })
+                    return res.status(400).json({ success: false, message: 'Invalid Password' })
                 }
             })
         } else {
