@@ -4,6 +4,7 @@ const body_parser = require('body-parser')
 const usersRouter = require('./Routes/usersRouter')
 const tasksRouter = require('./Routes/tasksRouter')
 const workRouter = require('./Routes/workRouter')
+const jwtAuth = require('./middlewares/jwtAuth')
 
 const errorHandler = require('./middlewares/error')
 const cors = require('cors')
@@ -18,6 +19,11 @@ app.use(body_parser.json())
 app.use(cors())
 app.options('*',cors())
 
+//Autthentication before using any API
+
+app.use(jwtAuth())
+// console.log(jwtAuth());
+
 //Routes
 var api = process.env.API_URL
 
@@ -31,9 +37,6 @@ app.get('/',async (req,res)=>{
 
 // To handle error and send custom message
 app.use(errorHandler)
-
-//Schemas
-const Work = require('./Models/Work')
 
 //Database connection
 var uri = process.env.CONNECTION_STRING
