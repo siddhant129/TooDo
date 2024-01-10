@@ -22,7 +22,6 @@ app.options('*',cors())
 //Autthentication before using any API
 
 app.use(jwtAuth())
-// console.log(jwtAuth());
 
 //Routes
 var api = process.env.API_URL
@@ -34,6 +33,8 @@ app.use(`${api}/work`,workRouter)
 app.get('/',async (req,res)=>{
     res.send('Website is hosted')
 })
+
+
 
 // To handle error and send custom message
 app.use(errorHandler)

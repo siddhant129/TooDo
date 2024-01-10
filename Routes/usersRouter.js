@@ -2,8 +2,6 @@ const express = require('express')
 const mongoose = require('mongoose')
 const {getAllUsers, createUser, loginUser} = require('../controller/usersController')
 const { Users } = require('../Models/users')
-const bcryptjs = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 // dotenv 
@@ -23,7 +21,7 @@ router
 .post('/logIn',loginUser)
 
 //To get only specific user by id
-router.get('/:id', async (req, res) => {
+.get('/:id', async (req, res) => {
     const user = await Users.findById(req.params.id)
     if (user) {
         res.status(200).json({ success: true, Users: user })

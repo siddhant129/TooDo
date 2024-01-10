@@ -16,6 +16,7 @@ function jwtAuth() {
                     const token = req.headers.authorization.split(' ')[1]
                     let payload = jsonwebtoken.decode(token)
                     req.userId = payload.userId
+                    req.userName = payload.userName
                     return token
                 }
                 else {
@@ -29,7 +30,8 @@ function jwtAuth() {
         }
 
     }).unless({
-        path: [`${API_URL}/users/logIn`]
+        path: [`${API_URL}/users/logIn`,
+        `${API_URL}/users/signUp`]
     })
 }
 

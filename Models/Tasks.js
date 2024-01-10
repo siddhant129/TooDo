@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const {Users} = require('./users')
 
 const taskSchema = new mongoose.Schema({
     name :{
@@ -13,12 +12,15 @@ const taskSchema = new mongoose.Schema({
     date : {
         type : Date,
         default : Date.now()
-    },
-    userId :{
-        type : mongoose.SchemaTypes.ObjectId,
-        ref : 'Users'
     }
+    // workId :[{
+    //     type : mongoose.SchemaTypes.ObjectId,
+    //     ref : 'Works',
+    //     unique :true
+    // }]
 })
+
+// taskSchema.index({name:1},{unique :true})
 
 taskSchema.virtual('id').get(function(){
     return this._id.toHexString()

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const { Users } = require('../Models/users')
+const {Works} = require('../Models/Work')
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorResponse = require('../utils/errorResponse')
@@ -11,7 +12,13 @@ const router = express.Router();
 // @Get request to get all users
 // @Public method
 exports.getAllUsers = asyncHandler( async (req, res, next) => {
-        const allUsers = await Users.find()
+        let allUsers = await Users.find().populate({
+            path : 'works',
+            populate :{
+                path : 'tasks'
+            }
+        })
+        
         if (allUsers) {
             res.status(200).json({ success: true, Users: allUsers })
         } else {
@@ -30,9 +37,8 @@ exports.createUser = asyncHandler(async (req, res, next) => {
             image: req.body.image
         })
             const createdUser = await Users.create(newUser)
-            console.log(createdUser);
             if (createdUser) {
-                res.status(201).json({ success: true, Users: createdUser.userName, message : 'User successfully created' })
+               return res.status(201).json({ success: true, Users: createdUser.userName, message : 'User successfully created' })
             } else {
                 return next(new errorResponse('User not created', 400))
             } 
@@ -45,11 +51,11 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
         userName: req.body.user,
         passwordHash: req.body.password
     })
-        const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] })
+        const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] }).select('userName passwordHash')
         if (userData) {
-            bcryptjs.compare(userLogData.passwordHash, userData.passwordHash, (err, data) => {
+            bcryptjs.compare(req.body.password, userData.passwordHash, (err, data) => {
                 if (err) {
-                    return next(new errorResponse('Invalid password', 400))
+                    return next(new errorResponse(err.message, 400))
                 } else if (data) {
                     const secret = process.env.secret
                     const token = jwt.sign(

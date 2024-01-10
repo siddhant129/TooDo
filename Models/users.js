@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const {Works} = require('./Work')
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,11 +15,16 @@ const userSchema = new mongoose.Schema(
     },
     passwordHash :{
         type : String,
-        required : true
+        required : true,
+        select : false
     },
     image : {
         type : String
-    }
+    },
+    works :[{
+        type : mongoose.SchemaTypes.ObjectId,
+        ref : 'Works'
+    }]
   }
 
 )
