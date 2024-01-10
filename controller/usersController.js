@@ -5,7 +5,7 @@ const {Works} = require('../Models/Work')
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorResponse = require('../utils/errorResponse')
-const asyncHandler = require('../middlewares/asyncHandler')
+const asyncHandler = require('../middlewares/asyncHandler');
 
 const router = express.Router();
 
@@ -25,6 +25,17 @@ exports.getAllUsers = asyncHandler( async (req, res, next) => {
             return next('No users found', 400)
         }
 })
+// @Get request to get user by id
+// @Public method
+exports.getUser = asyncHandler( async (req, res) => {
+    const user = await Users.findById(req.params.id)
+    if (user) {
+        res.status(200).json({ success: true, Users: user })
+    } else {
+        res.status(400).json({ success: false, Message: 'No user found' })
+    }
+}
+)
 
 // @Post request to create new user
 // @Public Method
@@ -51,7 +62,14 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
         userName: req.body.user,
         passwordHash: req.body.password
     })
-        const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] }).select('userName passwordHash')
+        const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] })
+        .select('userName passwordHash works')
+        .populate({
+            path : 'works',
+            populate: {
+                path : 'tasks'
+            }
+        })
         if (userData) {
             bcryptjs.compare(req.body.password, userData.passwordHash, (err, data) => {
                 if (err) {
@@ -65,7 +83,7 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
                         },
                         secret
                     )
-                    res.status(200).json({ success: true, token: token, userName : userData.userName })
+                    res.status(200).json({ success: true, token: token, userName : userData.userName, works : userData.works })
                 }
                 else if (!data) {
                     return res.status(400).json({ success: false, message: 'Invalid Password' })
