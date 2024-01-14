@@ -1,6 +1,20 @@
 const mongoose = require('mongoose')
 const { Users } = require('../Models/users')
-const { Tasks } = require('../Models/Tasks')
+
+const taskSchema = new mongoose.Schema({
+    name :{
+        type : String,
+        required : true
+    },
+    description : {
+        type : String,
+        required : true
+    },
+    date : {
+        type : Date,
+        default : Date.now()
+    }
+})
 
 const workSchema = new mongoose.Schema({
     workName: {
@@ -22,15 +36,14 @@ const workSchema = new mongoose.Schema({
     userName: {
         type: String
     },
-    tasks: [{
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: 'Tasks',
-        unique :true
-    }]
+    tasks:[
+    {
+        type : taskSchema
+    }
+    ]
 })
 
 workSchema.index({ workName: 1, userId: 1 }, { unique: true })
-
 
 workSchema.virtual('id').get(function(){
     return this._id.toHexString()

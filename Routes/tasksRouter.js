@@ -1,14 +1,12 @@
-const {Tasks} = require('../Models/Tasks')
 const express = require('express')
-const { createTask } = require('../controller/tasksController')
+const { createTask ,deleteTask } = require('../controller/tasksController')
 const router = express.Router()
 
-router.get('/', async (req, res)=>{
-    const allTasks = await Tasks.find()
-    return res.status(200).json({success : true, tasks : allTasks})
-})
-
 router
+//route to create task
 .post('/createTask',createTask)
+
+// route to delete task
+.get('/deleteTask',deleteTask)
 
 module.exports = router

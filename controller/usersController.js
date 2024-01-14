@@ -28,11 +28,11 @@ exports.getAllUsers = asyncHandler( async (req, res, next) => {
 // @Get request to get user by id
 // @Public method
 exports.getUser = asyncHandler( async (req, res) => {
-    const user = await Users.findById(req.params.id)
+    const user = await Users.findById(req.params.id).populate('works')
     if (user) {
         res.status(200).json({ success: true, Users: user })
     } else {
-        res.status(400).json({ success: false, Message: 'No user found' })
+        next(new errorResponse('User not found', 400))
     }
 }
 )
@@ -65,10 +65,7 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
         const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] })
         .select('userName passwordHash works')
         .populate({
-            path : 'works',
-            populate: {
-                path : 'tasks'
-            }
+            path : 'works'
         })
         if (userData) {
             bcryptjs.compare(req.body.password, userData.passwordHash, (err, data) => {
@@ -86,7 +83,8 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
                     res.status(200).json({ success: true, token: token, userName : userData.userName, works : userData.works })
                 }
                 else if (!data) {
-                    return res.status(400).json({ success: false, message: 'Invalid Password' })
+                    // return res.status(400).json({ success: false, message: 'Invalid Password' })
+                    return next(new errorResponse('Invalid password', 400))
                 }
             })
         } else {
