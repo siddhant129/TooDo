@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const body_parser = require('body-parser')
 const usersRouter = require('./Routes/usersRouter')
 const tasksRouter = require('./Routes/tasksRouter')
-const workRouter = require('./Routes/workRouter')
+const folderRouter = require('./Routes/folderRouter')
 const jwtAuth = require('./middlewares/jwtAuth')
 
 const errorHandler = require('./middlewares/error')
@@ -28,7 +28,7 @@ var api = process.env.API_URL
 
 app.use(`${api}/users`,usersRouter)
 app.use(`${api}/tasks`,tasksRouter)
-app.use(`${api}/work`,workRouter)
+app.use(`${api}/folder`,folderRouter)
 
 app.get('/',async (req,res)=>{
     res.send('Website is hosted')

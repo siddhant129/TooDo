@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const { Users } = require('../Models/users')
-const {Works} = require('../Models/Work')
+const {folders} = require('../Models/folder')
 const bcryptjs = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const errorResponse = require('../utils/errorResponse')
@@ -13,7 +13,7 @@ const router = express.Router();
 // @Public method
 exports.getAllUsers = asyncHandler( async (req, res, next) => {
         let allUsers = await Users.find().populate({
-            path : 'works',
+            path : 'folders',
             populate :{
                 path : 'tasks'
             }
@@ -28,7 +28,7 @@ exports.getAllUsers = asyncHandler( async (req, res, next) => {
 // @Get request to get user by id
 // @Public method
 exports.getUser = asyncHandler( async (req, res) => {
-    const user = await Users.findById(req.params.id).populate('works')
+    const user = await Users.findById(req.params.id).populate('folders')
     if (user) {
         res.status(200).json({ success: true, Users: user })
     } else {
@@ -63,9 +63,9 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
         passwordHash: req.body.password
     })
         const userData = await Users.findOne().where({ $or: [{ userName: userLogData.userName }, { email: userLogData.userName }] })
-        .select('userName passwordHash works')
+        .select('userName passwordHash folders')
         .populate({
-            path : 'works'
+            path : 'folders'
         })
         if (userData) {
             bcryptjs.compare(req.body.password, userData.passwordHash, (err, data) => {
@@ -80,7 +80,7 @@ exports.loginUser = asyncHandler( async (req, res, next) => {
                         },
                         secret
                     )
-                    res.status(200).json({ success: true, token: token, userName : userData.userName, works : userData.works })
+                    res.status(200).json({ success: true, token: token, userName : userData.userName, folders : userData.folders })
                 }
                 else if (!data) {
                     // return res.status(400).json({ success: false, message: 'Invalid Password' })

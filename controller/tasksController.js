@@ -1,5 +1,5 @@
 const { Tasks } = require('../Models/Tasks')
-const { Works } = require('../Models/Work')
+const { folders } = require('../Models/folder')
 const asyncHandler = require('../middlewares/asyncHandler')
 const errorResponse = require('../utils/errorResponse')
 
@@ -12,7 +12,7 @@ exports.createTask = asyncHandler(async (req, res, next) => {
             description: req.body.description
         }
     )
-    const updatedWork = await Works.findByIdAndUpdate(req.body.workId,
+    const updatedfolder = await folders.findByIdAndUpdate(req.body.folderId,
         {
             $push: { tasks: task }
         },
@@ -20,8 +20,8 @@ exports.createTask = asyncHandler(async (req, res, next) => {
             new :true
         }
     )
-    if (updatedWork) {
-        return res.status(201).json({ success: true, message: 'Task created successfully', tasks: updatedWork.tasks })
+    if (updatedfolder) {
+        return res.status(201).json({ success: true, message: 'Task created successfully', tasks: updatedfolder.tasks })
     }
     return next(new errorResponse("Task not created", 404))
 }
@@ -31,7 +31,7 @@ exports.createTask = asyncHandler(async (req, res, next) => {
 // @Private Method (Token reqired)
 exports.deleteTask = asyncHandler(
     async (req, res, next) => {
-        const deletedTask = await Works.findByIdAndUpdate(req.query.workId, {
+        const deletedTask = await folders.findByIdAndUpdate(req.query.folderId, {
             $pull: { tasks: { _id: req.query.taskId } }
         },
             { new: true })

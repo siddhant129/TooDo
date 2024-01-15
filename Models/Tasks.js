@@ -13,9 +13,9 @@ const taskSchema = new mongoose.Schema({
         type : Date,
         default : Date.now()
     }
-    // workId :[{
+    // folderId :[{
     //     type : mongoose.SchemaTypes.ObjectId,
-    //     ref : 'Works',
+    //     ref : 'folders',
     //     unique :true
     // }]
 })

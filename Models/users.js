@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const {Works} = require('./Work')
+const {folders} = require('./folder')
 
 const userSchema = new mongoose.Schema(
   {
@@ -21,9 +21,9 @@ const userSchema = new mongoose.Schema(
     image : {
         type : String
     },
-    works :[{
+    folders :[{
         type : mongoose.SchemaTypes.ObjectId,
-        ref : 'Works'
+        ref : 'folders'
     }]
   }
 

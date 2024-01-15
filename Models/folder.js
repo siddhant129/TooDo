@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const { Users } = require('../Models/users')
+const { Users } = require('./users')
 
 const taskSchema = new mongoose.Schema({
     name :{
@@ -16,8 +16,8 @@ const taskSchema = new mongoose.Schema({
     }
 })
 
-const workSchema = new mongoose.Schema({
-    workName: {
+const folderSchema = new mongoose.Schema({
+    folderName: {
         type: String,
         required: true
     },
@@ -43,14 +43,14 @@ const workSchema = new mongoose.Schema({
     ]
 })
 
-workSchema.index({ workName: 1, userId: 1 }, { unique: true })
+folderSchema.index({ folderName: 1, userId: 1 }, { unique: true })
 
-workSchema.virtual('id').get(function(){
+folderSchema.virtual('id').get(function(){
     return this._id.toHexString()
 })
 
-workSchema.set('toJSON',{
+folderSchema.set('toJSON',{
     virtuals :true
 })
 
-exports.Works = mongoose.model('Works', workSchema)
+exports.folders = mongoose.model('folders', folderSchema)
