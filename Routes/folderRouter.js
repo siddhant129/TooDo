@@ -11,6 +11,6 @@ router
     .post('/createFolder', createFolder)
 
     //To delete folder
-    .get('/deleteFolder', deleteFolder)
+    .delete('/deleteFolder', deleteFolder)
 
 module.exports = router

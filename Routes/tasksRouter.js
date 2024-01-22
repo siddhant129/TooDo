@@ -7,6 +7,6 @@ router
 .post('/createTask',createTask)
 
 // route to delete task
-.get('/deleteTask',deleteTask)
+.delete('/deleteTask',deleteTask)
 
 module.exports = router
