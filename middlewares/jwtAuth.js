@@ -31,7 +31,8 @@ function jwtAuth() {
 
     }).unless({
         path: [`${API_URL}/users/logIn`,
-        `${API_URL}/users/signUp`]
+        `${API_URL}/users/signUp`,
+    `/`]
     })
 }
 

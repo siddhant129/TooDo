@@ -30,11 +30,10 @@ app.use(`${api}/users`,usersRouter)
 app.use(`${api}/tasks`,tasksRouter)
 app.use(`${api}/folder`,folderRouter)
 
-app.get('/',async (req,res)=>{
-    res.send('Website is hosted')
+//API documentation route
+app.get('/', (req,res)=>{
+    res.sendFile(__dirname+'/Public/index.html')
 })
-
-
 
 // To handle error and send custom message
 app.use(errorHandler)
