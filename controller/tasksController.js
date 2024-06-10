@@ -58,6 +58,7 @@ exports.updateTask = asyncHandler(async (req, res, next) => {
         if (task._id === req.body.id) {
           task.name = req.body.name;
           task.description = req.body.description;
+          task.status = req.body.status ?? "Not started";
         }
         return task;
       });
